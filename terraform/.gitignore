@@ -14,7 +14,7 @@
 # PEM-file
 
 *.pem
-
+*.sh
 # Crash log files
 crash.log
 crash.*.log
