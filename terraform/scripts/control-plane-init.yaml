@@ -16,7 +16,7 @@ write_files:
 runcmd:
   - chown -R ubuntu:ubuntu /home/ubuntu/bin
   - chmod +x /home/ubuntu/bin/worker-init.sh
-  
+
   - kubeadm config images pull
   - kubeadm init --pod-network-cidr=192.168.0.0/16
 
