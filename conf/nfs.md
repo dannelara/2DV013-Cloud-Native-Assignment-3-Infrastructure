@@ -12,20 +12,16 @@
 
 > sudo chmod g+rwxs /data
 
+###
+
+Security groups are configured by the openstack client so we do not need to allow ports or change the ufw etc.
+
 ### Sharing the Directories / Export the Directory
 
 > sudo echo -e "/data\t172.16.0.0/16(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
 
 > sudo exportfs -av
 
-CREATE TABLE COLOR(
-ID SERIAL PRIMARY KEY NOT NULL,
-NAME TEXT NOT NULL UNIQUE,
-RED SMALLINT NOT NULL,
-GREEN SMALLINT NOT NULL,
-BLUE SMALLINT NOT NULL
-);
+## Postgres exec command.
 
-INSERT INTO COLOR (NAME,RED,GREEN,BLUE) VALUES('GREEN',0,128,0);
-
-SELECT \* FROM COLOR;
+kubectl exec -it [pod-name] -- psql -h localhost -U user --password -p 5432 db

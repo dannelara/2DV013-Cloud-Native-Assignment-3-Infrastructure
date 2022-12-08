@@ -1,0 +1,85 @@
+### Might need to make a new PV for this and the second db.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-litter-db-volume
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 172.16.0.15
+    path: "/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: litter-db-pvc
+spec:
+  volumeName: nfs-litter-db-volume
+  selector:
+    matchLabels:
+      deployment.app: litter-db
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litter-db-config
+data:
+  POSTGRES_DB: db
+  POSTGRES_USER: user ## BYT
+  POSTGRES_PASSWORD: pass ## BYT
+  PGDATA: /data/litterdb
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: litter-db
+  labels:
+    deployment.app: litter-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment.app: litter-db
+  template:
+    metadata:
+      labels:
+        deployment.app: litter-db
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: litter-db-config
+          volumeMounts:
+            - mountPath: /data
+              name: pgdatavol
+      volumes:
+        - name: pgdatavol
+          persistentVolumeClaim:
+            claimName: litter-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: litter-db-svc
+spec:
+  ports:
+    - name: litter-db-port
+      port: 5432
+  selector:
+    deployment.app: litter-db

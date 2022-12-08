@@ -16,9 +16,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nfs-authdb-volume
+  name: auth-db-pvc
 spec:
-  volumeName: nfs-volume-authdb
+  volumeName: nfs-authdb-volume
   selector:
     matchLabels:
       deployment.app: auth-db
@@ -83,3 +83,4 @@ spec:
       port: 5432
   selector:
     deployment.app: auth-db
+## const conString = "postgres://<username>:<password>@auth-db-svc:5432/db";
