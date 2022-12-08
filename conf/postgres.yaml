@@ -1,0 +1,85 @@
+### Might need to make a new PV for this and the second db.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-authdb-volume
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 172.16.0.15
+    path: "/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-authdb-volume
+spec:
+  volumeName: nfs-volume-authdb
+  selector:
+    matchLabels:
+      deployment.app: auth-db
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-db-config
+data:
+  POSTGRES_DB: db
+  POSTGRES_USER: user ## BYT
+  POSTGRES_PASSWORD: pass ## BYT
+  PGDATA: /data/authdb
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-db
+  labels:
+    deployment.app: auth-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment.app: auth-db
+  template:
+    metadata:
+      labels:
+        deployment.app: auth-db
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: auth-db-config
+          volumeMounts:
+            - mountPath: /data
+              name: pgdatavol
+      volumes:
+        - name: pgdatavol
+          persistentVolumeClaim:
+            claimName: auth-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-db-svc
+spec:
+  ports:
+    - name: auth-db-port
+      port: 5432
+  selector:
+    deployment.app: auth-db

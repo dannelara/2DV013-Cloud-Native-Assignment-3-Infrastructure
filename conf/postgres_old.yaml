@@ -1,0 +1,77 @@
+---
+## Config för pstgrs
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    deployment.app: postgres-authdb
+data:
+  POSTGRES_DB: postgresdb
+  POSTGRES_USER: admin ## Byt
+  POSTGRES_PASSWORD: psltest ## Byt
+---
+### Claim for pstgrs
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-volume-claim # Sets PVC's name
+  labels:
+    deployment.app: postgres-authdb # Defines app to create PVC for
+spec:
+  volumeName: nfs-volume
+  accessModes:
+    - ReadWriteOnce # Kolla upp!
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-svc
+  labels:
+    service.name: postgres-svc
+spec:
+  ports:
+    - name: "postgres-svc-port"
+      port: 5432
+      targetPort: 5432
+  selector:
+    deployment.app: postgres-authdb
+---
+## Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-authdb
+  labels:
+    deployment.app: postgres-authdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment.app: postgres-authdb
+  template:
+    metadata:
+      labels:
+        deployment.app: postgres-authdb
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:12.10 # Docker image: Kolla vad vi behöver
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432 # Exposing the container port 5432 for PostgreSQL client connections.
+          envFrom:
+            - configMapRef:
+                name: postgres-config # Using the ConfigMap postgres-config
+          volumeMounts:
+            - mountPath: /data/auth
+              name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: postgres-volume-claim
+---
+
