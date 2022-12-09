@@ -61,5 +61,8 @@ resource "openstack_compute_instance_v2" "nfs" {
   network {
     uuid = "${openstack_networking_network_v2.network.id}"
   }
-  user_data = "${data.template_cloudinit_config.cloud_init_config.rendered}"
+
+  user_data = "${data.template_cloudinit_config.nfs_init_config.rendered}"
+  
+  
 }

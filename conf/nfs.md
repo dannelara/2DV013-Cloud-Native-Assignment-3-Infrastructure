@@ -22,6 +22,8 @@ Security groups are configured by the openstack client so we do not need to allo
 
 > sudo exportfs -av
 
-## Postgres exec command.
+## DONE!
 
-kubectl exec -it [pod-name] -- psql -h localhost -U user --password -p 5432 db
+<!-- ## Postgres exec command.
+
+kubectl exec -it [pod-name] -- psql -h localhost -U user --password -p 5432 db -->
