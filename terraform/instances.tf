@@ -56,7 +56,11 @@ resource "openstack_compute_instance_v2" "nfs" {
   image_id          = "${data.openstack_images_image_v2.image.id}"
   flavor_id         = "${data.openstack_compute_flavor_v2.flavor.id}"
   key_pair          = "${var.keypair}"
-  security_groups   = [openstack_compute_secgroup_v2.secgroup_nfs.name, "default"]
+    security_group_ids = [
+    "${data.openstack_networking_secgroup_v2.secgroup_default.id}",
+    "${openstack_networking_secgroup_v2.secgroup_nfs.id}"
+  ]
+  
   availability_zone = "Education"
   network {
     uuid = "${openstack_networking_network_v2.network.id}"

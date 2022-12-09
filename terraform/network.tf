@@ -43,7 +43,7 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_ssh" {
   security_group_id = "${openstack_networking_secgroup_v2.secgroup_ssh.id}"
 }
 
-resource "openstack_networking_secgroup_v2" "secgroup_nfs" {
+resource "openstack_compute_secgroup_v2" "secgroup_nfs" {
   name        = "nfs"
   description = "Allow 2049 traffic"
 }
