@@ -11,5 +11,3 @@ runcmd:
   - sudo chmod g+rwxs /data
   - sudo echo -e "/data\t172.16.0.0/16(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
   - sudo exportfs -av
-
-  - echo "Done!"
