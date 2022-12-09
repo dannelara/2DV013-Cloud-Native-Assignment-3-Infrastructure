@@ -43,6 +43,17 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_ssh" {
   security_group_id = "${openstack_networking_secgroup_v2.secgroup_ssh.id}"
 }
 
+# resource "openstack_compute_secgroup_v2" "nfs" {
+#   name        = "nfs"
+#   description = "fs group rules"
+#   rule {
+#     from_port   = 2049
+#     to_port     = 2049
+#     ip_protocol = "tcp"
+#     cidr        = "0.0.0.0/0"
+#   }
+# }
+
 resource "openstack_compute_secgroup_v2" "secgroup_nfs" {
   name        = "nfs"
   description = "Allow 2049 traffic"
