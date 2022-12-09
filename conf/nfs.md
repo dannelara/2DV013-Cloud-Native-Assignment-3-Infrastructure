@@ -24,6 +24,8 @@ Security groups are configured by the openstack client so we do not need to allo
 
 ## DONE!
 
+/sbin/showmount -e <ip>
+
 <!-- ## Postgres exec command.
 
 kubectl exec -it [pod-name] -- psql -h localhost -U user --password -p 5432 db -->
