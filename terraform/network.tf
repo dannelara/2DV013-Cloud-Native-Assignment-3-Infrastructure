@@ -43,6 +43,21 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_ssh" {
   security_group_id = "${openstack_networking_secgroup_v2.secgroup_ssh.id}"
 }
 
+resource "openstack_networking_secgroup_v2" "secgroup_nfs" {
+  name        = "nfs"
+  description = "Allow 2049 traffic"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_nfs" {
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 2049
+  port_range_max    = 2049
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = "${openstack_networking_secgroup_v2.secgroup_nfs.id}"
+}
+
 ######################################################################
 # Create a port
 
