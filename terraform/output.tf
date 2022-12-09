@@ -8,3 +8,7 @@ output "control_plane_machine" {
 output "worker_machines" {
  value = "${openstack_compute_instance_v2.instance_workers.*.access_ip_v4}"
 }
+
+output "nfs_instance" {
+ value = "${openstack_compute_instance_v2.nfs.access_ip_v4}"
+}

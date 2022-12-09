@@ -39,7 +39,7 @@ data:
   PGDATA: /data/authdb
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: auth-db
   labels:

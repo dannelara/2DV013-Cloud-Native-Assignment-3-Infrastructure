@@ -52,4 +52,3 @@ variable "worker_node_machine_name" {
   type    = string
   default = "k8s-worker"
 }
-
