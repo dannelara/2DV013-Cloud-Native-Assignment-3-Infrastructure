@@ -47,11 +47,6 @@ data "template_cloudinit_config" "control_plane_config" {
 }
 
 data "template_cloudinit_config" "nfs_init_config" {
-    part {
-    content_type = "text/cloud-config"
-    content = "${file("./scripts/cloud-init.yaml")}"
-  }
-  
   part {
     content_type = "text/cloud-config"
     content = "${file("./scripts/nfs-init.yaml")}"
