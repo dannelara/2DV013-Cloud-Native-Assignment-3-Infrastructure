@@ -37,7 +37,7 @@ deploy:
     # - kubectl delete secret regcred || true
     # - kubectl create secret docker-registry regcred --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
 
-    - kubectl apply -f ./conf/db_secrets.yaml -f postgres-authdb.yaml -f postgres-litterdb.yaml
+    - kubectl apply -f ./conf/db_secrets.yaml -f ./conf/postgres-authdb.yaml -f ./conf/postgres-litterdb.yaml
 
     # Debugging outputs after completion
     - kubectl get deployments
