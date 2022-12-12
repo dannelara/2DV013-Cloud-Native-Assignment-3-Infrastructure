@@ -48,7 +48,7 @@ metadata:
 data:
   POSTGRES_DB: db
   PGDATA: /data/authdb
-  AUTHDB_HOST: postgresql://auth-db-svc:5432/db
+  AUTHDB_HOST: postgresql://auth-db-0.default.svc:5432/db
 ---
 apiVersion: apps/v1
 kind: StatefulSet

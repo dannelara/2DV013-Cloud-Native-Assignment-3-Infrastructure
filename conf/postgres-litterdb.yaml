@@ -47,7 +47,7 @@ metadata:
 data:
   POSTGRES_DB: db
   PGDATA: /data/litterdb
-  AUTHDB_HOST: postgresql://litter-db-svc:5432/db
+  AUTHDB_HOST: postgresql://litter-db-svc.default.svc:5432/db
 ---
 apiVersion: apps/v1
 kind: StatefulSet
