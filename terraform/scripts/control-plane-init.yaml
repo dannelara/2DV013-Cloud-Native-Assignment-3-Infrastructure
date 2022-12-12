@@ -28,6 +28,7 @@ runcmd:
   - sudo -H -u ubuntu bash -c 'kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml'
 
   - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
   # # ## Install helm
   - curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
   - sudo apt-get install apt-transport-https --yes

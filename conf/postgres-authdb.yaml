@@ -10,7 +10,7 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    server: <IP>
+    server: 172.16.0.15 # Change
     path: "/data"
 ---
 apiVersion: v1
@@ -34,9 +34,8 @@ metadata:
   name: auth-db-config
 data:
   POSTGRES_DB: db
-  POSTGRES_USER: user ## BYT
-  POSTGRES_PASSWORD: pass ## BYT
   PGDATA: /data/authdb
+  AUTHDB_HOST: postgresql://auth-db-svc:5432/db
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -65,6 +64,17 @@ spec:
           envFrom:
             - configMapRef:
                 name: auth-db-config
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: POSTGRES_PASSWORD
           volumeMounts:
             - mountPath: /data
               name: pgdatavol
