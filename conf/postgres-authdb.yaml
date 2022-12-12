@@ -29,6 +29,19 @@ spec:
       storage: 5Gi
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  name: auth-db-svc
+spec:
+  ports:
+    - name: auth-db-port
+      port: 5432
+  selector:
+    deployment.app: auth-db
+## const conString = "postgres://<username>:<password>@auth-db-svc:5432/db";
+
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: auth-db-config
@@ -44,6 +57,7 @@ metadata:
   labels:
     deployment.app: auth-db
 spec:
+  serviceName: auth-db-svc
   replicas: 1
   selector:
     matchLabels:
@@ -82,15 +96,3 @@ spec:
         - name: pgdatavol
           persistentVolumeClaim:
             claimName: auth-db-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: auth-db-svc
-spec:
-  ports:
-    - name: auth-db-port
-      port: 5432
-  selector:
-    deployment.app: auth-db
-## const conString = "postgres://<username>:<password>@auth-db-svc:5432/db";

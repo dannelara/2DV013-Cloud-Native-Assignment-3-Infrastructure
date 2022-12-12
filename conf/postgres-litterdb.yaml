@@ -29,6 +29,18 @@ spec:
       storage: 5Gi
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  name: litter-db-svc
+spec:
+  ports:
+    - name: litter-db-port
+      port: 5432
+  selector:
+    deployment.app: litter-db
+
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: litter-db-config
@@ -44,6 +56,7 @@ metadata:
   labels:
     deployment.app: litter-db
 spec:
+  serviceName: litter-db-svc
   replicas: 1
   selector:
     matchLabels:
@@ -82,14 +95,3 @@ spec:
         - name: pgdatavol
           persistentVolumeClaim:
             claimName: litter-db-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: litter-db-svc
-spec:
-  ports:
-    - name: litter-db-port
-      port: 5432
-  selector:
-    deployment.app: litter-db
